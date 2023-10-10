@@ -1,7 +1,7 @@
 import os
+import platform
 import sys
 import time
-import platform
 
 
 def daemonize():
@@ -16,7 +16,7 @@ def daemonize():
     >>> daemonize()
     """
     if platform.system() == 'Windows':
-        import win32api, win32con, win32event, win32process
+        import win32api, win32process
 
         # Create a new process to make it independent
         hProcess = win32api.GetCurrentProcess()

@@ -9,8 +9,8 @@ import paho.mqtt.client as mqtt
 
 from sense_service.environment import Environment
 from sense_service.errors import InvalidTemperatureSourceError
-from sense_service.sensors import SensorDataSmoother, Temperature
 from sense_service.helpers import SuppressLogging, logging
+from sense_service.sensors import SensorDataSmoother, Temperature
 
 
 def on_connect(client, userdata, flags, rc):

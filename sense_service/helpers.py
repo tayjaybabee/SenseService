@@ -13,6 +13,7 @@ class SuppressLogging:
         with SuppressLogging('root', logging.WARNING):
             logging.warning("This is a warning!")  # This will be suppressed
     """
+
     def __init__(self, logger_name, level):
         self.logger_name = logger_name
         self.level = level
@@ -32,4 +33,3 @@ class SuppressLogging:
         """
         logger = logging.getLogger(self.logger_name)
         logger.setLevel(self.original_level)
-

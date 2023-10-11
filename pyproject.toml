@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "senseservice"
+name = "sense_service"
 version = "1.0-dev.1"
 description = "Service for broadcasting sense data over mqtt"
 authors = ["Inspyre Softworks"]
@@ -8,13 +8,21 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pywin32 = {version = "^306", platform = "windows"}
-sense-hat = {version = "^2.4.0", platform = "linux"}
+pywin32 = { version = "^306", platform = "windows" }
+sense-hat = { version = "^2.4.0", platform = "linux" }
 paho-mqtt = "^1.6.1"
 
 
 [tool.poetry.group.dev.dependencies]
 sense-emu = "^1.2.1"
+sphinx = "^7.2.6"
+ipython = "^8.16.1"
+prompt-toolkit = "^3.0.39"
+ptipython = "^1.0.1"
+rich = "^13.6.0"
+
+[tool.poetry.scripts]
+senseservice = 'Scripts.service:main'
 
 [build-system]
 requires = ["poetry-core"]

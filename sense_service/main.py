@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from atexit import register
+
 from sense_service import SenseHatMQTT
 from sense_service.sensors import SensorDataSmoother
-
 
 if __name__ == "__main__":
     smoother = SensorDataSmoother('moving_average', window_size=25)

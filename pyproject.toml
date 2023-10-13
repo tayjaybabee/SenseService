@@ -22,7 +22,7 @@ ptipython = "^1.0.1"
 rich = "^13.6.0"
 
 [tool.poetry.scripts]
-senseservice = 'Scripts.service:main'
+senseservice = 'Scripts.main:main'
 
 [build-system]
 requires = ["poetry-core"]

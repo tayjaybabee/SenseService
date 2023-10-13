@@ -31,9 +31,13 @@ class SenseHatMQTT:
     def __init__(
             self,
             broker_address: str,
+            broker_port: int,
+            topic: str,
             data_smoother: Optional[SensorDataSmoother] = None,
             high_res_interval: (int | float) = 1,
-            temp_source: Optional[str] = None
+            temp_source: Optional[str] = None,
+            temp_unit: Optional[str] = None,
+            hat_version: Optional[str] = None
     ) -> None:
         """
         Initialize the SenseHatMQTT class.
@@ -69,7 +73,7 @@ class SenseHatMQTT:
         env = Environment()
 
         # Store the temperature unit from the Environment instance
-        self.TEMP_UNIT = env.TEMP_UNIT
+        self.TEMP_UNIT = temp_unit or env.get_temp_unit() or 'C'
 
         # Import SenseHat or SenseEmu based on NO_HAT_MODE environment variable
         if not env.NO_HAT_MODE:
@@ -78,7 +82,7 @@ class SenseHatMQTT:
             from sense_emu import SenseHat
 
         # Store the HAT version from the Environment instance
-        self.HAT_VER = env.HAT_VER
+        self.HAT_VER = hat_version or env.get_hat_version() or '2'
 
         # Suppress logging if the HAT version is '1', then instantiate SenseHat.
         # NOTE:
@@ -91,8 +95,11 @@ class SenseHatMQTT:
             # If the HAT is revision 2 we instantiate without suppressing warnings
             self.sense = SenseHat()
 
+        self.broker_address = broker_address
+        self.broker_port = broker_port
+
         # Connect to the MQTT broker on the specified address and default port (1883)
-        self.client.connect(broker_address, 1883, 60)
+        self.client.connect(self.broker_address, self.broker_port, 60)
 
         self.__temp_collector = None
 

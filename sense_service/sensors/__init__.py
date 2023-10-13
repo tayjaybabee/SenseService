@@ -1,6 +1,23 @@
 from collections import deque
 
 
+VALID_TEMPERATURE_UNITS = [
+    ('C', 'Celsius'),
+    ('F', 'Fahrenheit'),
+    ('K', 'Kelvin'),
+]
+
+VALID_TEMPERATURE_SOURCES = [
+    'humidity',
+    'pressure'
+]
+
+
+VALID_SMOOTHING_ALGORITHMS = [
+    'moving_average',
+    'exponential_moving_average',
+]
+
 class SensorDataSmoother:
     """
     Class to apply smoothing algorithms to sensor data.

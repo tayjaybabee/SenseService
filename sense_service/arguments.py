@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser, Namespace, ArgumentDefaultsHelpFormatter
 from sense_service.environment import Environment
 from sense_service.__about__ import __PROG__ as PROG_NAME
 from sense_service.sensors import VALID_TEMPERATURE_UNITS, VALID_TEMPERATURE_SOURCES, VALID_SMOOTHING_ALGORITHMS
@@ -67,6 +67,14 @@ class Arguments(ArgumentParser):
         )
 
         self.add_argument(
+            '-D', '--debug-mode',
+            action='store_true',
+            default=False,
+            help='Enable debug mode.',
+            required=False
+        )
+
+        self.add_argument(
             '--display-real-feel',
             action='store_true',
             default=False,
@@ -94,7 +102,7 @@ class Arguments(ArgumentParser):
             action='store',
             default='rpi-sense',
             help='The MQTT topic you wish to publish to.',
-            required=False
+            required=False,
         )
 
         self.__parsed = None
@@ -119,8 +127,11 @@ class Arguments(ArgumentParser):
         """
         return super().parse_args(*args, **kwargs)
 
-ARGUMENTS = Arguments()
-PARSED = ARGUMENTS.args
-import sys
 
-print(sys.argv)
+ARGUMENTS = Arguments(formatter_class=ArgumentDefaultsHelpFormatter)
+PARSED = ARGUMENTS.args
+
+if PARSED.debug_mode:
+    import sys
+
+    print(sys.argv)

@@ -16,6 +16,7 @@ from sense_service.sensors import SensorDataSmoother, Temperature
 def on_connect(client, userdata, flags, rc):
     """Called when the client receives a CONNACK response from the server."""
     print(f"Connected with result code {rc}")
+    print(f'Client ID: {client._client_id}')
 
 
 def on_message(client, userdata, msg):
@@ -32,7 +33,7 @@ class SenseHatMQTT:
             self,
             broker_address: str,
             broker_port: int,
-            topic: str,
+            topic: Optional[str] = None,
             data_smoother: Optional[SensorDataSmoother] = None,
             high_res_interval: (int | float) = 1,
             temp_source: Optional[str] = None,
@@ -44,6 +45,8 @@ class SenseHatMQTT:
 
         Parameters:
             broker_address (str): The address of the MQTT broker.
+            broker_port (int): The port of the MQTT broker.
+            topic (str, optional): The topic to publish sense data to, default is 'rpi-sense'.
             data_smoother (SensorDataSmoother, optional): An instance of the SensorDataSmoother class.
             high_res_interval (int): The interval for high-resolution temperature data collection.
             temp_source (str, optional): The source for temperature readings.
@@ -94,6 +97,8 @@ class SenseHatMQTT:
         else:
             # If the HAT is revision 2 we instantiate without suppressing warnings
             self.sense = SenseHat()
+
+        self.__topic = topic or 'rpi-sense'
 
         self.broker_address = broker_address
         self.broker_port = broker_port
@@ -146,6 +151,21 @@ class SenseHatMQTT:
     def temp_collector(self):
         return self.__temp_collector
 
+    @property
+    def topic(self) -> str:
+        """
+        The topic to publish data to.
+
+        Returns:
+            str: The topic to publish data to.
+        """
+        return self.__topic
+
+    @topic.setter
+    def topic(self, new: str):
+        if not isinstance(new, str):
+            raise TypeError('topic must be a string!')
+
     def get_temp(self):
         """Get the temperature from the Sense HAT."""
         raw_temp = None
@@ -171,7 +191,7 @@ class SenseHatMQTT:
     def publish_sense_data(self, payload: Dict[str, float]) -> None:
         """Publishes Sense HAT data to MQTT broker."""
         try:
-            self.client.publish("rpi-sense", json.dumps(payload))
+            self.client.publish(self.topic, json.dumps(payload))
         except Exception as e:  # You can specify more concrete exception types
             logging.error(f"Failed to publish data to MQTT broker: {e}")
 
